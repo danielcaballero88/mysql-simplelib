@@ -1,4 +1,22 @@
 .env
 __pycache__
-*.egg-info
 .vscode
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Everything starting with ~
+~*
+.~*
