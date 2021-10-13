@@ -6,12 +6,13 @@ logger = logging.getLogger(__name__)
 # ------------------------------------------
 # MySQL Methods
 
-def connect_to_server(host, userName, userPasswd):
+def connect_to_server(host, port, userName, userPasswd):
     """ Create a connection to a server """
     logger.debug('Connecting to server %s as user %s', host, userName)
     try:
         serverConnection = connect(
-            host=host, 
+            host=host,
+            port=port,
             user=userName,
             passwd=userPasswd
         )
@@ -27,7 +28,7 @@ def connect_to_database(host, userName, userPasswd, dbName):
     logger.debug('Connecting to database %s in server %s as user %s' % (dbName, host, userName))
     try:
         dbConnection = connect(
-            host=host, 
+            host=host,
             user=userName,
             passwd=userPasswd,
             database=dbName
@@ -39,17 +40,17 @@ def connect_to_database(host, userName, userPasswd, dbName):
     # Done
     return dbConnection
 
-def execute(connection, query, after=None, close='cursor', many=False, params=[]):
+def execute(connection, query, after=None, close='cursor', many=False, params={}, seq_of_params=[]):
     """ Helper function to encapsulate exception handling in a single method """
     try:
         logger.debug('Executing query: %s', query)
         # Get Cursor
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
         # Execute given query
         if many:
-            cursor.executemany(query, params)
+            cursor.executemany(query, seq_of_params)
         else:
-            cursor.execute(query)
+            cursor.execute(query, params)
         logger.debug('cursor.execute(): Success')
         # Perform after action
         logger.debug('Executing after action: %s', after)
